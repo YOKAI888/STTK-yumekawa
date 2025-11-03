@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🌸ステタクの夢かわ菌糸ワールド🌸</title>
+  <title>🌸ステルス卓上計算機🌸</title>
   <style>
     /* ---- animations ---- */
     @keyframes float { 
@@ -41,7 +41,6 @@
       min-height:100vh;
     }
 
-    /* ---- header ---- */
     h1 {
       margin: 6px 0 8px 0;
       font-size:2.6rem;
@@ -50,7 +49,6 @@
       margin-top:6px;
     }
 
-    /* gradient title is put in its own span to avoid clipping child elements */
     .title-gradient {
       display:inline-block;
       background: -webkit-linear-gradient(left,#ff66cc,#cc66ff,#ff99ff);
@@ -60,12 +58,11 @@
       animation: sparkle 1.8s infinite;
     }
 
-    /* small subtitle kept separate and plain so browsers never hide it */
     .subtitle {
       display:inline-block;
       font-size:0.55em;
       vertical-align:middle;
-      color: rgba(255,190,230,0.95);
+      color: #ff99e7;
       text-shadow:0 0 8px rgba(255,102,204,0.45);
       margin-left:0.45rem;
     }
@@ -84,7 +81,6 @@
       font-weight:700;
     }
 
-    /* ---- mycelium container ---- */
     #mycelium {
       position: relative;
       height: 72vh;
@@ -94,13 +90,12 @@
       background: rgba(255,255,255,0.14);
       border-radius: 28px;
       box-shadow: 0 0 50px rgba(255,105,180,0.35);
-      overflow: visible; /* allow spores/hearts to fly out */
+      overflow: visible;
       margin: 20px auto;
       max-width: 1100px;
       width: calc(100% - 40px);
     }
 
-    /* ---- mushroom ---- */
     .mushroom {
       position: absolute;
       width: 120px;
@@ -120,7 +115,7 @@
       text-shadow: 0 0 8px #ff3399;
       transition: all 0.45s ease;
       z-index: 10;
-      transform: translateY(10px); /* little sink so stem appears partially hidden */
+      transform: translateY(10px);
     }
     .mushroom:hover {
       transform: scale(1.5) rotate(20deg);
@@ -140,7 +135,7 @@
     .mushroom::after {
       content:'';
       position:absolute;
-      bottom:-20px; /* slightly raised so stem is partly hidden */
+      bottom:-20px;
       left:50%;
       transform:translateX(-50%);
       width:22px;height:40px;
@@ -149,7 +144,6 @@
       box-shadow:0 0 20px #ff66cc;
     }
 
-    /* particles/hearts */
     .heart {
       position:absolute;
       font-size:18px;
@@ -159,7 +153,6 @@
       z-index:5;
     }
 
-    /* responsive tweaks */
     @media (max-width:600px) {
       h1 { font-size:1.6rem; letter-spacing:2px; }
       .mushroom { width:92px; height:120px; font-size:12px; }
@@ -177,7 +170,6 @@
   <div id="mycelium" aria-hidden="false"></div>
 
   <script>
-    // concepts array (kept fun)
     const concepts = [
       "カントのきゅん脳死命法💗","ニーチェのドキドキ回帰💗","荘子のゆめゆめ夢💗",
       "ラプラスの脳死悪魔💗","ゲーデルのふわふわ定理💗","ピタゴラスのハート定理💗",
@@ -185,6 +177,13 @@
       "脳死のきゅん的帰納法💕","菌根ハート革命💗","脳を死なす愛の定理💗","脳味噌お花畑の証明💕",
       "脳きゅん爆発💗","ふわふわ脳死革命💕","脳死により盛り高増量中💕",
       "きゅんは定義済み変数だきゅん💗","きゅんは観測誤差だきゅん💕","シュレディンガーのきゅん💕"
+    ];
+
+    const hoverPhrases = [
+      "触っとけだきゅん💗",
+      "黙って呟いとけきゅん💕",
+      "耳にもカビは生えるんだぞきゅん💕",
+      "とっとと寝ろよだきゅん💕"
     ];
 
     const container = document.getElementById('mycelium');
@@ -203,23 +202,20 @@
     function growMushroom(){
       const mush = document.createElement('div');
       mush.className = 'mushroom';
-      // position within container using percentages
-      const x = Math.random() * 70 + 10; // left %
-      const y = Math.random() * 55 + 10; // bottom %
+      const x = Math.random() * 70 + 10;
+      const y = Math.random() * 55 + 10;
       mush.style.left = x + '%';
       mush.style.bottom = y + '%';
       mush.innerText = concepts[Math.floor(Math.random()*concepts.length)];
-      mush.title = '触っとけだきゅん💗';
 
-      // click/tap behavior
+      // 🍄ランダムきゅんセリフ
+      mush.title = hoverPhrases[Math.floor(Math.random()*hoverPhrases.length)];
+
       mush.addEventListener('click', (ev)=>{
-        // compute container-relative coords for particle spawn
         const rect = container.getBoundingClientRect();
         const mushRect = mush.getBoundingClientRect();
         const baseX = mushRect.left - rect.left + mushRect.width/2;
         const baseY = mushRect.top - rect.top + mushRect.height/2;
-
-        // spawn fewer particles to avoid heavy load, but looks nice
         const particles = 18;
         for(let i=0;i<particles;i++){
           const dx = (Math.random()-0.5) * 260;
@@ -228,7 +224,6 @@
           createHeart(baseX, baseY, dx, dy, rot, 3000 + Math.random()*1200);
         }
 
-        // visual mushroom pop
         mush.innerHTML = 'きゅん💗';
         mush.style.transition = 'transform 0.5s ease, opacity 1.2s ease';
         mush.style.transform = 'scale(1.8) rotate(540deg)';
@@ -239,14 +234,12 @@
           setTimeout(()=> { if(mush.parentNode) mush.remove(); }, 1200);
         }, 500);
 
-        // tweet intent (opens in new tab)
-        const tweet = `【ステタクきゅん胞子】${mush.innerText} #ステタク #夢かわ`;
+        const tweet = `💕ゆめかわごみばこ💕${mush.innerText} #キュンついでに脳死`;
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`, '_blank');
       });
 
       container.appendChild(mush);
 
-      // auto-remove after a while to not accumulate too many items
       setTimeout(()=>{
         if(mush.parentNode){
           mush.style.transition = 'all 4s ease';
@@ -257,7 +250,6 @@
       }, 18000);
     }
 
-    // initial + interval (randomized)
     setTimeout(growMushroom, 500);
     setInterval(growMushroom, 3000 + Math.random()*3000);
   </script>
