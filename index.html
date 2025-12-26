@@ -3,20 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>🌸真・ステルス計算機🌸</title>
+    <title>🌸真・菌糸界隈ステルス計算機🌸</title>
     <style>
-        /* ---- アニメーション ---- */
+        /* ---- Animations ---- */
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes cloudDrift { from { transform: translate(-10%, 0); } to { transform: translate(10%, 0); } }
-        /* 筑紫の浮遊感 */
-        @keyframes float { 
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
 
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #fff5f8; }
-        body { font-family: "Hiragino Maru Gothic ProN", sans-serif; -webkit-user-select: none; }
+        body { font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", sans-serif; -webkit-user-select: none; }
 
+        /* 背景グラデーション */
         #bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             background: linear-gradient(-45deg, #ffcde8, #d2f4ff, #ffe0ec, #e9d5ff);
@@ -26,66 +23,63 @@
         /* 視認性の高い雲 */
         .cloud {
             position: absolute; border-radius: 50%; z-index: 1;
-            background: rgba(255, 255, 255, 0.8);
-            filter: blur(40px); animation: cloudDrift 25s infinite alternate ease-in-out;
+            background: rgba(255, 255, 255, 0.85);
+            filter: blur(45px); animation: cloudDrift 25s infinite alternate ease-in-out;
         }
 
         /* タイトルエリア（旧verの輝きを継承） */
         #header-wrapper {
             position: relative; z-index: 100; padding: 15px 0;
-            background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
             border-bottom: 3px dotted #ffb7d1; text-align: center;
         }
         h1 {
             font-size: 1.8rem; margin: 0; color: #ff3399;
             text-shadow: 0 0 15px rgba(255,255,255,1), 2px 2px 0 #fff;
+            letter-spacing: 2px;
         }
 
-        /* 計算機UI */
+        /* 計算機UI：右上に配置 */
         #calc-ui {
             position: fixed; top: 90px; right: 20px; z-index: 200;
             background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3); width: 180px; border: 2px solid #ffcfe5;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3); width: 185px; border: 2px solid #ffcfe5;
         }
         #calc-display {
             width: 100%; height: 35px; background: #fff; border: 1px solid #ffcfe5; margin-bottom: 8px;
             text-align: right; padding: 5px; box-sizing: border-box; font-size: 20px; color: #ff3399; 
-            border-radius: 8px; font-weight: bold;
+            border-radius: 8px; font-weight: bold; outline: none;
         }
         .calc-btn {
-            width: 38px; height: 38px; margin: 1px; border: none; background: #fff0f6;
-            color: #ff66aa; border-radius: 8px; cursor: pointer; font-weight: bold;
+            width: 40px; height: 40px; margin: 1px; border: none; background: #fff0f6;
+            color: #ff66aa; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;
         }
+        .calc-btn:active { background: #ff66aa; color: white; transform: scale(0.9); }
 
+        /* 菌糸コンテナ */
         #mycelium { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; pointer-events: none; }
 
-        /* 🌸 旧verの雰囲気を纏った筑紫 🌸 */
+        /* 筑紫：旧verの質感 ＆ ファファファッ出現 */
         .mushroom-wrapper {
             position: absolute; width: 100px; height: 140px;
             display: flex; justify-content: center; align-items: center;
             z-index: 15; cursor: pointer; pointer-events: auto;
-            /* 「ファファファッ」と下から生えるための遷移 */
-            transition: transform 2.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s;
+            transition: transform 2.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s;
             will-change: transform, opacity;
         }
-        
         .mushroom-inner { animation: float 5s infinite ease-in-out; }
 
         .mushroom {
             width: 95px; height: 125px;
-            /* 旧verのカラーグラデーションを完全再現 */
             background: radial-gradient(ellipse at top,#ffffff 0%,#ffccff 25%,#ff99cc 60%,#ff6699 100%);
             border-radius: 70% 70% 55% 55% / 80% 80% 50% 50%;
             display:flex; align-items:center; justify-content:center;
             font-size:12px; color:#fff; font-weight:800; text-align:center;
             padding: 10px; box-sizing: border-box; position: relative;
-            /* ふわふわ感を出す強力な発光 */
             box-shadow: 0 0 35px #ff99cc, inset 0 0 25px #fff, 0 0 60px rgba(255,105,180,0.4);
             text-shadow: 0 0 8px #ff3399;
         }
-        /* 筑紫の頭の🌸 */
         .mushroom::before { content: '🌸'; position: absolute; top: -28px; font-size: 32px; text-shadow: 0 0 15px #ff66cc; }
-        /* 筑紫の茎（竺） */
         .mushroom::after {
             content:''; position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
             width:20px; height:45px; background:linear-gradient(to bottom,#ff99cc,#ff6699);
@@ -97,17 +91,18 @@
 </head>
 <body>
     <div id="bg-container">
-        <div class="cloud" style="width:500px; height:250px; top:10%; left:-10%;"></div>
-        <div class="cloud" style="width:400px; height:200px; top:60%; left:65%;"></div>
+        <div class="cloud" style="width:500px; height:250px; top:8%; left:-5%;"></div>
+        <div class="cloud" style="width:400px; height:200px; top:65%; left:60%;"></div>
+        <div class="cloud" style="width:300px; height:180px; top:35%; left:20%; background: rgba(255,255,255,0.5);"></div>
     </div>
     
     <div id="header-wrapper">
-        <h1>🌸ようこそ。ステルス卓上計算機です。🌸</h1>
+        <h1>🌸ステタクの夢かわ菌糸界隈🌸</h1>
     </div>
 
     <div id="calc-ui">
         <input type="text" id="calc-display" readonly value="0">
-        <div id="calc-buttons">
+        <div>
             <button class="calc-btn" onclick="addChar('7')">7</button><button class="calc-btn" onclick="addChar('8')">8</button><button class="calc-btn" onclick="addChar('9')">9</button><button class="calc-btn" onclick="addChar('/')">÷</button><br>
             <button class="calc-btn" onclick="addChar('4')">4</button><button class="calc-btn" onclick="addChar('5')">5</button><button class="calc-btn" onclick="addChar('6')">6</button><button class="calc-btn" onclick="addChar('*')">×</button><br>
             <button class="calc-btn" onclick="addChar('1')">1</button><button class="calc-btn" onclick="addChar('2')">2</button><button class="calc-btn" onclick="addChar('3')">3</button><button class="calc-btn" onclick="addChar('-')">-</button><br>
@@ -122,6 +117,7 @@
         const display = document.getElementById('calc-display');
         const concepts = ["カントのきゅん脳死命法💗","ニーチェのドキドキ回帰💗","荘子のゆめゆめ夢💗","ラプラスの脳死悪魔💗","ゲーデルのふわふわ定理💗","ピタゴラスのハート定理💗","オイラーのラブ公式💕","シュレディンガーのきゅん💕","脳死のきゅん的帰納法💕","ピタゴラスの脳死定理💕","脳味噌お花畑の証明💕","脳きゅん爆発💗","ふわふわ脳死革命💕","ラブリー・ラジアン・コンプレックス💕"];
 
+        // ---- 計算機ロジック ----
         window.addChar = (char) => {
             if(display.value === "0" || display.value === "IQ200") display.value = char;
             else display.value += char;
@@ -129,72 +125,81 @@
         window.resetCalc = () => { display.value = "0"; };
         window.execCalc = () => {
             if(display.value === '111') {
-                // 30本が「ファファファッ」と下から生えてくる
-                for(let i=0; i<30; i++) {
-                    setTimeout(() => growMushroom(true), i * 60);
-                }
+                for(let i=0; i<30; i++) setTimeout(() => growMushroom(true), i * 65);
             }
             display.value = "IQ200";
         };
 
-        function createHeart(x, y) {
+        // ---- 愛の胞子（ハート）生成 ----
+        function createHeart(x, y, emoji = '💗') {
             const h = document.createElement('div');
-            h.className = 'heart'; h.innerText = '💗';
+            h.className = 'heart'; h.innerText = emoji;
             h.style.left = x + 'px'; h.style.top = y + 'px';
             document.body.appendChild(h);
             h.animate([
                 { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                { transform: `translate(${(Math.random()-0.5)*400}px, -400px) scale(0)`, opacity: 0 }
+                { transform: `translate(${(Math.random()-0.5)*450}px, -450px) scale(0)`, opacity: 0 }
             ], { duration: 2500, easing: 'ease-out' }).onfinish = () => h.remove();
         }
 
+        // ---- 筑紫（きのこ）生成 ----
         function growMushroom(isBurst = false) {
             const wrapper = document.createElement('div');
             wrapper.className = 'mushroom-wrapper';
-            const x = (Math.random() * 90 + 5);
+            const x = (Math.random() * 88 + 6);
             const y = (Math.random() * 65 + 15);
             
             wrapper.style.left = x + '%';
-            wrapper.style.bottom = '-150px'; // 画面外下に待機
+            wrapper.style.bottom = '-180px';
             wrapper.style.opacity = '0';
 
             const inner = document.createElement('div');
             inner.className = 'mushroom-inner';
-
             const mush = document.createElement('div');
             mush.className = 'mushroom';
-            mush.innerText = concepts[Math.floor(Math.random() * concepts.length)];
+            const concept = concepts[Math.floor(Math.random() * concepts.length)];
+            mush.innerText = concept;
 
             inner.appendChild(mush);
             wrapper.appendChild(inner);
             container.appendChild(wrapper);
 
-            // 「ファファファッ」と滑らかにせり上がる
+            // 「ファファファッ」と下からせり上がる
             requestAnimationFrame(() => {
-                wrapper.style.transform = `translateY(-${y + 15}vh)`;
+                wrapper.style.transform = `translateY(-${y + 20}vh)`;
                 wrapper.style.opacity = '1';
             });
 
+            // 🌸 スマホ・PC共通：触れた瞬間のきゅんエフェクト
+            const handleTouch = (e) => {
+                const pos = e.touches ? e.touches[0] : e;
+                for(let i=0; i<8; i++) createHeart(pos.clientX, pos.clientY, '💕');
+            };
+            wrapper.addEventListener('touchstart', handleTouch, {passive: true});
+            wrapper.addEventListener('mouseenter', handleTouch);
+
+            // クリック/タップ確定：X投稿
             wrapper.onclick = (e) => {
-                for(let i=0; i<18; i++) createHeart(e.clientX, e.clientY);
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('💕'+mush.innerText+' #キュンついでに脳死')}`, '_blank');
-                wrapper.style.transform += ' scale(0) rotate(360deg)';
+                for(let i=0; i<15; i++) createHeart(e.clientX, e.clientY, '💗');
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('💕'+concept+' #キュンついでに脳死')}`, '_blank');
+                wrapper.style.transform += ' scale(0) rotate(540deg)';
                 setTimeout(() => wrapper.remove(), 800);
             };
 
+            // 自然消滅
             setTimeout(() => {
                 if(wrapper.parentNode) {
                     wrapper.style.opacity = '0';
-                    wrapper.style.transform += ' translateY(-100px)';
-                    setTimeout(() => wrapper.remove(), 2000);
+                    wrapper.style.transform += ' translateY(-150px)';
+                    setTimeout(() => wrapper.remove(), 2500);
                 }
             }, isBurst ? 12000 : 18000);
         }
 
-        // 通常の菌糸活動
+        // 定期的に生やす
         setInterval(() => {
-            if(document.querySelectorAll('.mushroom-wrapper').length < 10) growMushroom();
-        }, 3500);
+            if(document.querySelectorAll('.mushroom-wrapper').length < 12) growMushroom();
+        }, 3000);
 
         growMushroom();
     </script>
