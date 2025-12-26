@@ -173,7 +173,7 @@
             // 🌸 スマホ・PC共通：触れた瞬間のきゅんエフェクト
             const handleTouch = (e) => {
                 const pos = e.touches ? e.touches[0] : e;
-                for(let i=0; i<8; i++) createHeart(pos.clientX, pos.clientY, '💕');
+                for(let i=0; i<11; i++) createHeart(pos.clientX, pos.clientY, '💕');
             };
             wrapper.addEventListener('touchstart', handleTouch, {passive: true});
             wrapper.addEventListener('mouseenter', handleTouch);
@@ -181,7 +181,7 @@
             // クリック/タップ確定：X投稿
             wrapper.onclick = (e) => {
                 for(let i=0; i<15; i++) createHeart(e.clientX, e.clientY, '💗');
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('💕'+concept+' #キュンついでに脳死')}`, '_blank');
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('💕'+concept+' #脳死ごみばこ')}`, '_blank');
                 wrapper.style.transform += ' scale(0) rotate(540deg)';
                 setTimeout(() => wrapper.remove(), 800);
             };
