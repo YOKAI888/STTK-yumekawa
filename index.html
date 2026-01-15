@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
     <title>🌸真・ステルス計算機🌸</title>
     <style>
         /* ---- Animations ---- */
@@ -11,7 +11,7 @@
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
 
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #fff5f8; }
-        body { font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", sans-serif; -webkit-user-select: none; }
+        body { font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", sans-serif; -webkit-user-select: none; touch-action: pan-y; }
 
         /* 背景グラデーション */
         #bg-container {
@@ -27,41 +27,46 @@
             filter: blur(45px); animation: cloudDrift 25s infinite alternate ease-in-out;
         }
 
-        /* タイトルエリア（旧verの輝きを継承） */
+        /* タイトルエリア：スマホ対応 */
         #header-wrapper {
-            position: relative; z-index: 100; padding: 15px 0;
+            position: relative; z-index: 100; padding: 10px 5px;
             background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
             border-bottom: 3px dotted #ffb7d1; text-align: center;
         }
         h1 {
-            font-size: 1.8rem; margin: 0; color: #ff3399;
+            font-size: 1.1rem; margin: 0; color: #ff3399;
             text-shadow: 0 0 15px rgba(255,255,255,1), 2px 2px 0 #fff;
-            letter-spacing: 2px;
+            letter-spacing: 1px; line-height: 1.4;
         }
 
-        /* 計算機UI：右上に配置 */
+        /* 計算機UI：スマホで押しやすく */
         #calc-ui {
-            position: fixed; top: 90px; right: 20px; z-index: 200;
-            background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3); width: 185px; border: 2px solid #ffcfe5;
+            position: fixed; top: 80px; right: 10px; z-index: 200;
+            background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3); 
+            width: min(220px, calc(100vw - 20px)); border: 2px solid #ffcfe5;
         }
         #calc-display {
-            width: 100%; height: 35px; background: #fff; border: 1px solid #ffcfe5; margin-bottom: 8px;
-            text-align: right; padding: 5px; box-sizing: border-box; font-size: 20px; color: #ff3399; 
+            width: 100%; height: 45px; background: #fff; border: 1px solid #ffcfe5; margin-bottom: 8px;
+            text-align: right; padding: 8px; box-sizing: border-box; font-size: 22px; color: #ff3399; 
             border-radius: 8px; font-weight: bold; outline: none;
         }
-        .calc-btn {
-            width: 40px; height: 40px; margin: 1px; border: none; background: #fff0f6;
-            color: #ff66aa; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        .calc-row {
+            display: flex; gap: 4px; margin-bottom: 4px;
         }
-        .calc-btn:active { background: #ff66aa; color: white; transform: scale(0.9); }
+        .calc-btn {
+            flex: 1; height: 50px; border: none; background: #fff0f6;
+            color: #ff66aa; border-radius: 10px; cursor: pointer; font-weight: bold; 
+            transition: 0.2s; font-size: 18px; touch-action: manipulation;
+        }
+        .calc-btn:active { background: #ff66aa; color: white; transform: scale(0.95); }
 
         /* 菌糸コンテナ */
         #mycelium { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; pointer-events: none; }
 
-        /* 筑紫：旧verの質感 ＆ ファファファッ出現 */
+        /* 筑紫：スマホでもタップしやすく */
         .mushroom-wrapper {
-            position: absolute; width: 100px; height: 140px;
+            position: absolute; width: 90px; height: 130px;
             display: flex; justify-content: center; align-items: center;
             z-index: 15; cursor: pointer; pointer-events: auto;
             transition: transform 2.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s;
@@ -70,23 +75,30 @@
         .mushroom-inner { animation: float 5s infinite ease-in-out; }
 
         .mushroom {
-            width: 95px; height: 125px;
+            width: 85px; height: 115px;
             background: radial-gradient(ellipse at top,#ffffff 0%,#ffccff 25%,#ff99cc 60%,#ff6699 100%);
             border-radius: 70% 70% 55% 55% / 80% 80% 50% 50%;
             display:flex; align-items:center; justify-content:center;
-            font-size:12px; color:#fff; font-weight:800; text-align:center;
-            padding: 10px; box-sizing: border-box; position: relative;
+            font-size:11px; color:#fff; font-weight:800; text-align:center;
+            padding: 8px; box-sizing: border-box; position: relative;
             box-shadow: 0 0 35px #ff99cc, inset 0 0 25px #fff, 0 0 60px rgba(255,105,180,0.4);
             text-shadow: 0 0 8px #ff3399;
         }
-        .mushroom::before { content: '🌸'; position: absolute; top: -28px; font-size: 32px; text-shadow: 0 0 15px #ff66cc; }
+        .mushroom::before { content: '🌸'; position: absolute; top: -25px; font-size: 28px; text-shadow: 0 0 15px #ff66cc; }
         .mushroom::after {
-            content:''; position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
-            width:20px; height:45px; background:linear-gradient(to bottom,#ff99cc,#ff6699);
+            content:''; position:absolute; bottom:-25px; left:50%; transform:translateX(-50%);
+            width:18px; height:40px; background:linear-gradient(to bottom,#ff99cc,#ff6699);
             border-radius:10px; box-shadow:0 0 20px #ff66cc;
         }
 
-        .heart { position:absolute; font-size:24px; pointer-events:none; z-index:250; }
+        .heart { position:absolute; font-size:20px; pointer-events:none; z-index:250; }
+
+        /* レスポンシブ調整 */
+        @media (max-width: 480px) {
+            h1 { font-size: 0.95rem; }
+            #calc-ui { top: 70px; }
+            .mushroom { font-size: 10px; width: 80px; height: 110px; }
+        }
     </style>
 </head>
 <body>
@@ -97,16 +109,34 @@
     </div>
     
     <div id="header-wrapper">
-        <h1>🌸ステルス卓上計算機へようこそ。任意のつくしに触れてXに投稿しよう。🌸</h1>
+        <h1>🌸ステルス卓上計算機へようこそ。<br>任意のつくしに触れてXに投稿しよう。🌸</h1>
     </div>
 
     <div id="calc-ui">
         <input type="text" id="calc-display" readonly value="0">
-        <div>
-            <button class="calc-btn" onclick="addChar('7')">7</button><button class="calc-btn" onclick="addChar('8')">8</button><button class="calc-btn" onclick="addChar('9')">9</button><button class="calc-btn" onclick="addChar('/')">÷</button><br>
-            <button class="calc-btn" onclick="addChar('4')">4</button><button class="calc-btn" onclick="addChar('5')">5</button><button class="calc-btn" onclick="addChar('6')">6</button><button class="calc-btn" onclick="addChar('*')">×</button><br>
-            <button class="calc-btn" onclick="addChar('1')">1</button><button class="calc-btn" onclick="addChar('2')">2</button><button class="calc-btn" onclick="addChar('3')">3</button><button class="calc-btn" onclick="addChar('-')">-</button><br>
-            <button class="calc-btn" onclick="addChar('0')">0</button><button class="calc-btn" onclick="resetCalc()">C</button><button class="calc-btn" onclick="execCalc()">=</button><button class="calc-btn" onclick="addChar('+')">+</button>
+        <div class="calc-row">
+            <button class="calc-btn" onclick="addChar('7')">7</button>
+            <button class="calc-btn" onclick="addChar('8')">8</button>
+            <button class="calc-btn" onclick="addChar('9')">9</button>
+            <button class="calc-btn" onclick="addChar('/')">÷</button>
+        </div>
+        <div class="calc-row">
+            <button class="calc-btn" onclick="addChar('4')">4</button>
+            <button class="calc-btn" onclick="addChar('5')">5</button>
+            <button class="calc-btn" onclick="addChar('6')">6</button>
+            <button class="calc-btn" onclick="addChar('*')">×</button>
+        </div>
+        <div class="calc-row">
+            <button class="calc-btn" onclick="addChar('1')">1</button>
+            <button class="calc-btn" onclick="addChar('2')">2</button>
+            <button class="calc-btn" onclick="addChar('3')">3</button>
+            <button class="calc-btn" onclick="addChar('-')">-</button>
+        </div>
+        <div class="calc-row">
+            <button class="calc-btn" onclick="addChar('0')">0</button>
+            <button class="calc-btn" onclick="resetCalc()">C</button>
+            <button class="calc-btn" onclick="execCalc()">=</button>
+            <button class="calc-btn" onclick="addChar('+')">+</button>
         </div>
     </div>
 
@@ -115,7 +145,7 @@
     <script>
         const container = document.getElementById('mycelium');
         const display = document.getElementById('calc-display');
-        const concepts = ["カントのきゅん脳死命法💗","ニーチェのドキドキ回帰💗","脳死者の列ベクトル💗","ラプラスの脳死悪魔💗","ゲーデルのふわふわ定理💗","ピタゴラスのハート定理💗","オイラーのラブ公式💕","シュレディンガーのきゅん💕","脳死のきゅん的帰納法💕","ピタゴラスの脳死定理💕","脳味噌お花畑の証明💕","1Åの単純な脳細胞💗","ふわふわ脳死革命💕","ラブリー・ラジアン・コンプレックス💕","πの末尾で会いましょう💕","フェルマーの死せる脳細胞💕","あなたと量子レベルでもつれたい💕","エントロピー増大で脳死💕","フェルマーの最終脳死💕","リーマン予想と見せかけて恋💕",];
+        const concepts = ["カントのきゅん脳死命法💗","ニーチェのドキドキ回帰💗","脳死者の列ベクトル💗","ラプラスの脳死悪魔💗","ゲーデルのふわふわ定理💗","ピタゴラスのハート定理💗","オイラーのラブ公式💕","シュレディンガーのきゅん💕","脳死のきゅん的帰納法💕","ピタゴラスの脳死定理💕","脳味噌お花畑の証明💕","1Åの単純な脳細胞💗","ふわふわ脳死革命💕","ラブリー・ラジアン・コンプレックス💕","πの末尾で会いましょう💕","フェルマーの死せる脳細胞💕","あなたと量子レベルでもつれたい💕","エントロピー増大で脳死💕","フェルマーの最終脳死💕","リーマン予想と見せかけて恋💕",];
 
         // ---- 計算機ロジック ----
         window.addChar = (char) => {
@@ -138,16 +168,16 @@
             document.body.appendChild(h);
             h.animate([
                 { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                { transform: `translate(${(Math.random()-0.5)*450}px, -450px) scale(0)`, opacity: 0 }
-            ], { duration: 2500, easing: 'ease-out' }).onfinish = () => h.remove();
+                { transform: `translate(${(Math.random()-0.5)*300}px, -350px) scale(0)`, opacity: 0 }
+            ], { duration: 2200, easing: 'ease-out' }).onfinish = () => h.remove();
         }
 
         // ---- 筑紫（きのこ）生成 ----
         function growMushroom(isBurst = false) {
             const wrapper = document.createElement('div');
             wrapper.className = 'mushroom-wrapper';
-            const x = (Math.random() * 88 + 6);
-            const y = (Math.random() * 65 + 15);
+            const x = Math.max(5, Math.min(85, Math.random() * 80 + 10));
+            const y = Math.max(20, Math.min(60, Math.random() * 50 + 20));
             
             wrapper.style.left = x + '%';
             wrapper.style.bottom = '-180px';
@@ -170,17 +200,27 @@
                 wrapper.style.opacity = '1';
             });
 
-            // 🌸 スマホ・PC共通：触れた瞬間のきゅんエフェクト
+            // タッチ処理の改善
+            let touchHandled = false;
+            
             const handleTouch = (e) => {
+                if (touchHandled) return;
+                touchHandled = true;
                 const pos = e.touches ? e.touches[0] : e;
                 for(let i=0; i<11; i++) createHeart(pos.clientX, pos.clientY, '💕');
+                setTimeout(() => touchHandled = false, 300);
             };
+            
             wrapper.addEventListener('touchstart', handleTouch, {passive: true});
-            wrapper.addEventListener('mouseenter', handleTouch);
+            wrapper.addEventListener('mouseenter', (e) => {
+                if (!('ontouchstart' in window)) handleTouch(e);
+            });
 
             // クリック/タップ確定：X投稿
             wrapper.onclick = (e) => {
-                for(let i=0; i<15; i++) createHeart(e.clientX, e.clientY, '💗');
+                e.preventDefault();
+                const pos = e.touches ? e.touches[0] : e;
+                for(let i=0; i<15; i++) createHeart(pos.clientX || e.clientX, pos.clientY || e.clientY, '💗');
                 window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('💕'+concept+' #脳死ごみばこ')}`, '_blank');
                 wrapper.style.transform += ' scale(0) rotate(540deg)';
                 setTimeout(() => wrapper.remove(), 800);
@@ -198,7 +238,9 @@
 
         // 定期的に生やす
         setInterval(() => {
-            if(document.querySelectorAll('.mushroom-wrapper').length < 12) growMushroom();
+            const existingCount = document.querySelectorAll('.mushroom-wrapper').length;
+            const maxMushrooms = window.innerWidth < 480 ? 8 : 12;
+            if(existingCount < maxMushrooms) growMushroom();
         }, 3000);
 
         growMushroom();
